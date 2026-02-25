@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
+    <title>Espectro · Downhill Oldschool</title>
+    <style>
+        /* ----- RESET & FONTES ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f4f0ea;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #1c1b17;
+            line-height: 1.5;
+        }
+
+        h1, h2, h3, .serif-title {
+            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            color: #2b2a24;
+        }
+
+        /* ----- HEADER FIXO (RESPONSIVO) ----- */
+        .site-header {
+            position: sticky;
+            top: 0;
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 0 5%;
+            z-index: 100;
+            border-bottom: 1px solid #e2dcd2;
+        }
+
+        .header-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+
+        .logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: #2b2a24;
+            text-transform: uppercase;
+            line-height: 1.2;
+            border-left: 3px solid #b09b82;
+            padding-left: 18px;
+        }
+
+        .logo-text span {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            display: block;
+            letter-spacing: 2px;
+            color: #7a6a5a;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .main-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: #2b2a24;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .main-nav a:hover {
+            border-bottom-color: #b09b82;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            border: 1px solid #d4cdc2;
+            background: white;
+        }
+
+        .search-box input {
+            border: none;
+            padding: 8px 12px;
+            width: 200px;
+            font-size: 0.9rem;
+            background: transparent;
+            color: #2b2a24;
+        }
+
+        .search-box input::placeholder {
+            color: #9b8e7e;
+            font-style: italic;
+        }
+
+        .search-box input:focus {
+            outline: none;
+        }
+
+        .search-box button {
+            background: #d4cdc2;
+            border: none;
+            padding: 0 16px;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #2b2a24;
+            transition: background 0.2s;
+        }
+
+        .search-box button:hover {
+            background: #b09b82;
+            color: white;
+        }
+
+        /* ----- HERO VIDEO ----- */
+        .hero-video {
+            max-width: 1440px;
+            margin: 2rem auto 3rem;
+            padding: 0 5%;
+        }
+
+        .video-container {
+            position: relative;
+            background: #000;
+            border: 2px solid #b09b82;
+            outline: 1px solid #5f5346;
+            outline-offset: 4px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0.9;
+            transition: opacity 0.4s;
+            filter: sepia(0.2) contrast(1.1);
+        }
+
+        .video-container:hover video {
+            opacity: 1;
+            filter: sepia(0);
+        }
+
+        .video-caption {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(25, 20, 16, 0.8);
+            padding: 12px 28px;
+            border-left: 4px solid #b09b82;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            color: #ece3d7;
+            letter-spacing: 2px;
+            backdrop-filter: blur(2px);
+        }
+
+        /* ----- CONTAINER PRINCIPAL ----- */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 3rem 0 2rem;
+            border-bottom: 1px solid #d4cdc2;
+            padding-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 600;
+            color: #2b2a24;
+        }
+
+        .section-header .count {
+            color: #7a6a5a;
+            font-size: 0.95rem;
+        }
+
+        /* ----- GRADE DE PRODUTOS (LINKS DE AFILIADO) ----- */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .product-card {
+            background: #ffffff;
+            border: 1px solid #e2dcd2;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            border-color: #ffffff;
+            box-shadow: 0 12px 20px -8px rgba(75, 60, 45, 0.2);
+        }
+
+        .card-image {
+            aspect-ratio: 4 / 6; /* Proporção padrão retrato */
+            background-color: #b09b82;
+            background-position: center;
+            border-bottom: 2px solid #e2dcd2;
+            filter: sepia(0.15);
+            background-repeat: no-repeat;
+            transition: all 0.3s;
+        }
+
+        /* Classes específicas para cada tipo de imagem */
+        .img-quadro {
+            background-size: contain; /* Mostra o quadro inteiro */
+            background-color: #ffffff;
+        }
+        
+        .img-capacete {
+            background-size: cover; /* Preenche o espaço, foca no capacete */
+            background-position: center 30%; /* Ajusta para focar mais no produto */
+        }
+        
+        .img-camisa {
+            background-size: contain; /* Mostra a camisa inteira */
+            background-color: #ffffff;
+        }
+        
+        .img-oculos {
+            background-size: cover; /* Preenche, já que é um produto menor */
+            background-position: center;
+        }
+        
+        .img-luva {
+            background-size: contain; /* Mostra a luva inteira */
+            background-color: #ffffff;
+        }
+        
+        .img-guidao {
+            background-size: contain; /* Mostra o guidão inteiro */
+            background-color: #ffffff;
+        }
+
+        .card-content {
+            padding: 1.5rem 1.2rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .card-subhead {
+            font-size: 0.8rem;
+            color: #7a6a5a;
+            letter-spacing: 0.3px;
+            margin-bottom: 1rem;
+            font-style: italic;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px dashed #d4cdc2;
+            padding-top: 1rem;
+            margin-top: auto;
+        }
+
+        .price {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4a3f35;
+        }
+
+        .affiliate-link {
+            background: #d4cdc2;
+            color: #2b2a24;
+            text-decoration: none;
+            padding: 8px 18px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            transition: background 0.2s;
+            border: 1px solid transparent;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .affiliate-link:hover {
+            background: #b09b82;
+            color: white;
+            border-color: #8a765d;
+        }
+
+        /* ----- SEÇÃO OLD SCHOOL (FOTOS) ----- */
+        .oldschool-section {
+            margin: 5rem 0;
+            background-color: #eae3d9;
+            border: 1px solid #cbbcaa;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            position: relative;
+        }
+
+        .oldschool-section::before {
+            content: '';
+            position: absolute;
+            top: 8px; left: 8px; right: 8px; bottom: 8px;
+            border: 1px solid #b09b82;
+            pointer-events: none;
+        }
+
+        .oldschool-text {
+            flex: 1;
+            min-width: 280px;
+            z-index: 2;
+        }
+
+        .oldschool-text h2 {
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .oldschool-text p {
+            color: #3f382f;
+            font-size: 1.1rem;
+            max-width: 400px;
+        }
+
+        .oldschool-gallery {
+            flex: 2;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            z-index: 2;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1 / 1;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: grayscale(0.7) sepia(0.4);
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            filter: grayscale(0) sepia(0);
+            border-color: #b09b82;
+            transform: scale(1.02);
+        }
+
+        /* ----- FILTROS ----- */
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2rem 0 1rem;
+            padding: 1rem 0;
+            border-top: 1px solid #d4cdc2;
+            border-bottom: 1px solid #d4cdc2;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-badge {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            background: #ffffff;
+            border: 1px solid #d4cdc2;
+            padding: 6px 16px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-chip:hover {
+            background: #e2dcd2;
+            border-color: #b09b82;
+        }
+
+        .filter-chip.active {
+            background: #b09b82;
+            border-color: #8a765d;
+            color: white;
+        }
+
+        .filter-button {
+            background: #d4cdc2;
+            border: none;
+            padding: 10px 28px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .filter-button:hover {
+            background: #b09b82;
+            color: white;
+        }
+
+        /* ----- PAGINAÇÃO ----- */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 4rem 0 3rem;
+            flex-wrap: wrap;
+        }
+
+        .page-link {
+            background: white;
+            border: 1px solid #d4cdc2;
+            padding: 0.6rem 1.2rem;
+            text-decoration: none;
+            color: #2b2a24;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            min-width: 45px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .page-link:hover {
+            background: #b09b82;
+            border-color: #8a765d;
+            color: white;
+        }
+
+        .page-link.active {
+            background: #4a3f35;
+            border-color: #4a3f35;
+            color: white;
+        }
+
+        /* ----- FOOTER ----- */
+        .site-footer {
+            background: #1f1b17;
+            color: #d4cdc2;
+            padding: 3rem 5% 1.5rem;
+            margin-top: 5rem;
+            border-top: 3px double #b09b82;
+        }
+
+        .footer-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .footer-col h4 {
+            font-family: 'Cormorant Garamond', serif;
+            color: #e2dcd2;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #4a3f35;
+            padding-bottom: 6px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-col a {
+            color: #b09b82;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .footer-col a:hover {
+            color: #e2dcd2;
+        }
+
+        .footer-bottom {
+            max-width: 1440px;
+            margin: 2.5rem auto 0;
+            padding-top: 1.5rem;
+            border-top: 1px solid #4a3f35;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #7a6a5a;
+        }
+
+        /* ----- RESPONSIVIDADE PARA CELULAR ----- */
+        @media screen and (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                height: auto;
+                padding: 1rem 0;
+                gap: 1rem;
+            }
+
+            .logo-text {
+                font-size: 1.8rem;
+                padding-left: 12px;
+                border-left-width: 2px;
+            }
+
+            .main-nav ul {
+                justify-content: center;
+                gap: 1.2rem;
+            }
+
+            .main-nav a {
+                font-size: 0.85rem;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+
+            .video-caption {
+                bottom: 10px;
+                left: 10px;
+                padding: 8px 16px;
+                font-size: 1rem;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .oldschool-section {
+                padding: 2rem 1rem;
+            }
+
+            .oldschool-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filter-button {
+                width: 100%;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .logo-text {
+                font-size: 1.5rem;
+                letter-spacing: 2px;
+            }
+
+            .logo-text span {
+                font-size: 0.6rem;
+            }
+
+            .main-nav ul {
+                gap: 0.8rem;
+            }
+
+            .main-nav a {
+                font-size: 0.75rem;
+            }
+
+            .oldschool-gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .card-content h3 {
+                font-size: 1.2rem;
+            }
+
+            .price {
+                font-size: 1.2rem;
+            }
+            
+            .affiliate-link {
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+
+    <!-- Fontes Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- HEADER RESPONSIVO SEM EMOJIS -->
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo-text">
+                ESPECTRO
+                <span>downhill oldschool</span>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#">início</a></li>
+                    <li><a href="#">montanhas</a></li>
+                    <li><a href="#">armadura</a></li>
+                    <li><a href="#">crônicas</a></li>
+                    <li><a href="#">forja</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Buscar na forja...">
+                    <button id="searchButton">Buscar</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- VÍDEO HERO -->
+    <section class="hero-video">
+        <div class="video-container">
+            <video autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1511992242155-5e2b6d9d9f9a?q=80&w=2070&auto=format&fit=crop">
+                <source src="8926506-uhd_3840_2160_25fps.mp4" type="video/mp4">
+            </video>
+            <div class="video-caption">a era de aço e pó</div>
+        </div>
+    </section>
+
+    <main class="container">
+        <!-- BARRA DE FILTROS -->
+        <div class="filter-bar">
+            <div class="filter-badge" id="filterBadge">
+                <span class="filter-chip active" data-filter="all">todas</span>
+                <span class="filter-chip" data-filter="rigida">rigida</span>
+                <span class="filter-chip" data-filter="full">full suspension</span>
+                <span class="filter-chip" data-filter="pecas">perças</span>
+                <span class="filter-chip" data-filter="vestuario">vestuario</span>
+            </div>
+            <button class="filter-button" id="filterButton">filtrar</button>
+        </div>
+
+        <!-- GRADE DE PRODUTOS COM LINKS DE AFILIADO -->
+        <div class="section-header">
+            <h2>armamentos da montanha</h2>
+            <span class="count" id="productCount">7 peças</span>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+            <!-- CARD 1 - QUADRO (mostrar inteiro com fundo) -->
+            <a href="https://meli.la/1EccgJS" target="_blank" rel="nofollow sponsored" class="product-card" data-category="pecas">
+                <div class="card-image img-quadro" style="background-image: url('https://http2.mlstatic.com/D_NQ_NP_2X_841872-MLB106533520384_022026-F-quadro-bike-gtk-dh-spanked-full-azulpretoamarelo-ml.webp');"></div>
+                <div class="card-content">
+                    <h3>Quadro Gtk Dh Spanked Full M/l</h3>
+                    <div class="card-subhead">Quadro de alumínio 7005 para uso Downhill com suspensão Traseira VECTOR HLR hidráulica de 210" polegadas</div>
+                    <div class="card-footer">
+                        <span class="price">R$ 2.299</span>
+                        <span class="affiliate-link">ver produto</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- CARD 2 - CAPACETE (preencher, foco no produto) -->
+            <a href="https://meli.la/1Xitg1c" target="_blank" rel="nofollow sponsored" class="product-card" data-category="vestuario">
+                <div class="card-image img-capacete" style="background-image: url('https://http2.mlstatic.com/D_NQ_NP_2X_717022-MLB77570601457_072024-F-capacete-bike-fechado-fullface-fox-proframe-protecao-mips.webp');"></div>
+                <div class="card-content">
+                    <h3>Capacete Fechado Fullface Fox Proframe Proteção Mips</h3>
+                    <div class="card-subhead">Capacete Fox Racing Proframe - Leveza e Proteção para Montanha</div>
+                    <div class="card-footer">
+                        <span class="price">R$ 1.899</span>
+                        <span class="affiliate-link">ver produto</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- CARD 3 - CAMISA (mostrar inteira) -->
+            <a href="https://meli.la/2qyXRkV" target="_blank" rel="nofollow sponsored" class="product-card" data-category="vestuario">
+                <div class="card-image img-camisa" style="background-image: url('https://http2.mlstatic.com/D_NQ_NP_2X_979919-MLB98648467125_112025-F-camisa-bike-mtb-fox-racing-ranger-drirelease-manga-longa.webp');"></div>
+                <div class="card-content">
+                    <h3>Camisa Fox Racing Ranger Drirelease Manga Longa</h3>
+                    <div class="card-subhead">Camiseta Fox Ranger Drirelease - Manga Longa, Estilo casual, desempenho profissional</div>
+                    <div class="card-footer">
+                        <span class="price">R$ 389.02</span>
+                        <span class="affiliate-link">ver produto</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- CARD 4 - ÓCULOS (preencher, produto menor) -->
+            <a href="https://meli.la/1ucWb1H" target="_blank" rel="nofollow sponsored" class="product-card" data-category="vestuario">
+                <div class="card-image img-oculos" style="background-image: url('https://http2.mlstatic.com/D_NQ_NP_2X_619497-MLB90054316116_082025-F-oculos-motocross-downhill-ski-similar-100-racecrafte.webp');"></div>
+                <div class="card-content">
+                    <h3>Oculos Downhill 100% Racecrafte</h3>
+                    <div class="card-subhead">Oculos de proteção para downhill com tecnologia Racecrafte</div>
+                    <div class="card-footer">
+                        <span class="price">R$ 69.99</span>
+                        <span class="affiliate-link">ver produto</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- CARD 5 - LUVA (mostrar inteira) -->
+            <a href="https://meli.la/14xeWdv" target="_blank" rel="nofollow sponsored" class="product-card" data-category="vestuario">
+                <div class="card-image img-luva" style="background-image: url('https://http2.mlstatic.com/D_NQ_NP_2X_877070-MLB104704279964_012026-F-luva-ciclismo-touch-screen-longa-mtb-bike-down-hill.webp');"></div>
+                <div class="card-content">
+                    <h3>Luva Touch Screen Longa Mtb Bike Downhill</h3>
+                    <div class="card-subhead">Luva de proteção para ciclismo com tecnologia Touch Screen</div>
+                    <div class="card-footer">
+                        <span class="price">R$ 145.49</span>
+                        <span class="affiliate-link">ver produto</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- CARD 6 - QUADRO 2 (mostrar inteiro) -->
+            <a href="https://meli.la/22hr5sB" target="_blank" rel="nofollow sponsored" class="product-card" data-category="pecas">
+                <div class="card-image img-quadro" style="background-image: url('https://http2.mlstatic.com/D_NQ_NP_2X_627243-MLB89366459517_082025-F-quadro-absolute-brutus-pro-aro-26-freeride-downhill-grau.webp');"></div>
+                <div class="card-content">
+                    <h3>Quadro Absolute Brutus Pro Aro 26 Freeride Downhill</h3>
+                    <div class="card-subhead">O quadro de bicicleta Absolute Brutus Pro 26 é projetado para bicicletas de montanha com rodas de 26 polegadas</div>
+                    <div class="card-footer">
+                        <span class="price">R$ 659.90</span>
+                        <span class="affiliate-link">ver produto</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- CARD 7 - GUIDÃO (mostrar inteiro) -->
+            <a href="https://meli.la/1f5wuy4" target="_blank" rel="nofollow sponsored" class="product-card" data-category="pecas">
+                <div class="card-image img-guidao" style="background-image: url('https://http2.mlstatic.com/D_NQ_NP_2X_893370-MLB105236820203_012026-F-guido-bike-mtb-profissional-780mm-enduro-downhill.webp');"></div>
+                <div class="card-content">
+                    <h3>Guidão Profissional 780mm Downhill</h3>
+                    <div class="card-subhead">Este guidão de bicicleta foi desenvolvido para oferecer durabilidade, conforto e controle superior durante a pedalada</div>
+                    <div class="card-footer">
+                        <span class="price">R$ 79.19</span>
+                        <span class="affiliate-link">ver produto</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- SEÇÃO OLD SCHOOL / FOTOS INTERATIVAS -->
+        <div class="oldschool-section">
+            <div class="oldschool-text">
+                <h2>crônicas visuais</h2>
+                <p>Mergulhe no arquivo dos primeiros guerreiros da montanha. Fotos raras, pilotos lendários, bicicletas de aço e alma de pedra.</p>
+            </div>
+            <div class="oldschool-gallery">
+                <div class="gallery-item" style="background-image: url('2-528023410-612x612.jpg');" title="Downhill 1995"></div>
+                <div class="gallery-item" style="background-image: url('4-57384090-612x612.jpg');" title="Coroa de aço"></div>
+                <div class="gallery-item" style="background-image: url('4-831969272-612x612.jpg');" title="Poeira e glória"></div>
+                <div class="gallery-item" style="background-image: url('5-76552889-612x612.jpg');" title="Suspensão primitiva"></div>
+                <div class="gallery-item" style="background-image: url('gettyimages-77674273-612x612.jpg');" title="Capacete pele de dragão"></div>
+                <div class="gallery-item" style="background-image: url('s3-53217553-612x612.jpg');" title="Roda de madeira?"></div>
+            </div>
+        </div>
+
+        <!-- PAGINAÇÃO -->
+        <div class="pagination">
+            <a href="#" class="page-link active" data-page="1">1</a>
+            <a href="#" class="page-link" data-page="2">2</a>
+            <a href="#" class="page-link" data-page="3">></a>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>a forja</h4>
+                <ul>
+                    <li><a href="#" id="aboutLink">sobre nós</a></li>
+                    <li><a href="#" id="contactLink">contato</a></li>
+                    <li><a href="#" id="workLink">trabalhe conosco</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>suporte</h4>
+                <ul>
+                    <li><a href="#" id="returnsLink">trocas</a></li>
+                    <li><a href="#" id="guideLink">manual do guerreiro</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>legal</h4>
+                <ul>
+                    <li><a href="#" id="termsLink">termos de uso</a></li>
+                    <li><a href="#" id="privacyLink">privacidade</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 ESPECTRO · forjado com alma de montanha</p>
+        </div>
+    </footer>
+
+    <!-- Script para funcionalidades -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterChips = document.querySelectorAll('.filter-chip');
+            const filterButton = document.getElementById('filterButton');
+            const productCards = document.querySelectorAll('.product-card');
+            const productCount = document.getElementById('productCount');
+            
+            updateProductCount();
+            
+            filterChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    filterChips.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            filterButton.addEventListener('click', function() {
+                const activeFilter = document.querySelector('.filter-chip.active');
+                if (!activeFilter) return;
+                
+                const filterValue = activeFilter.getAttribute('data-filter');
+                
+                productCards.forEach(card => {
+                    if (filterValue === 'all') {
+                        card.style.display = 'flex';
+                    } else {
+                        const cardCategory = card.getAttribute('data-category');
+                        if (cardCategory === filterValue) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+                
+                updateProductCount();
+            });
+            
+            function updateProductCount() {
+                const visibleCards = document.querySelectorAll('.product-card[style="display: flex"], .product-card:not([style*="display: none"])');
+                const count = visibleCards.length;
+                productCount.textContent = count + ' peças';
+            }
+            
+            // Busca
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            
+            function performSearch() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    productCards.forEach(card => card.style.display = 'flex');
+                } else {
+                    productCards.forEach(card => {
+                        const title = card.querySelector('h3').textContent.toLowerCase();
+                        const desc = card.querySelector('.card-subhead').textContent.toLowerCase();
+                        
+                        if (title.includes(searchTerm) || desc.includes(searchTerm)) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                }
+                
+                updateProductCount();
+            }
+            
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', e => e.key === 'Enter' && performSearch());
+            
+            // Paginação
+            const pageLinks = document.querySelectorAll('.page-link');
+            pageLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    pageLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const page = this.getAttribute('data-page') || this.textContent;
+                    if (page !== '1') {
+                        alert('Funcionalidade de paginação em desenvolvimento. Você está navegando para a página ' + page);
+                    }
+                });
+            });
+            
+            // Links do footer
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Você clicou em: ' + this.textContent + '\nÁrea em desenvolvimento.');
+                });
+            });
+            
+            // Links do menu principal
+            const navLinks = document.querySelectorAll('.main-nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Navegação: ' + this.textContent + '\nÁrea em desenvolvimento.');
+                });
+            });
+            
+            // Galeria de fotos
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            galleryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    alert('Foto: ' + this.getAttribute('title') + '\n(Ampliar imagem em desenvolvimento)');
+                });
+            });
+            
+            console.log('Site ESPECTRO carregado. Links de afiliado funcionais.');
+        });
+    </script>
+</body>
+</html>
